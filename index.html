@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+   <head>
+      <meta charset="utf-8">
+      <title> Login Form </title>
+      <link rel="stylesheet" href="css/login.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+      <script>
+         async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            console.log('Attempting login with:', { email, password });
+
+            try {
+               const response = await fetch('https://com682-flask-api-hzcqe3cpbfc5drdd.uksouth-01.azurewebsites.net/login', { // Update the URL to your deployed backend
+                  method: 'POST',
+                  headers: {
+                     'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({ email, password })
+               });
+
+               if (response.ok) {
+                  const result = await response.json();
+                  console.log('Response:', result);
+
+                  if (response.status === 200) {
+                     alert(result.msg);
+                     // Redirect to teacher.html on successful login
+                     window.location.href = 'dashboard.html';
+                  } else {
+                     alert(result.msg);
+                  }
+               } else {
+                  console.error('HTTP error:', response.status);
+                  alert('Login failed');
+               }
+            } catch (error) {
+               console.error('Error:', error);
+               alert('An error occurred. Please try again.');
+            }
+         }
+
+         document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('loginBtn').addEventListener('click', login);
+         });
+      </script>
+   </head>
+   <body>
+      <div class="container">
+         <h2 class="login-title">Hello Students <br> (E-learning Platform)</h2>
+         <form class="login-form" id="loginForm">
+            <div>
+               <input id="email" type="text" placeholder="email" name="email" required />
+            </div>
+            <div>
+               <input id="password" type="password" placeholder="password" name="password" required />
+               <i class="fas fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+            </div>
+            <button class="btn btn--form" type="button" id="loginBtn">Log in</button>
+            <div class="register-container">
+               <a href="register.html" class="register-btn">Register?</a>
+            </div>
+         </form>
+      </div>
+      <script>
+         // Toggle password visibility
+         const togglePassword = document.querySelector('#togglePassword');
+         const password = document.querySelector('#password');
+
+         togglePassword.addEventListener('click', function (e) {
+            // Toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            // Toggle the eye icon
+            this.classList.toggle('fa-eye-slash');
+         });
+      </script>
+   </body>
+</html>
