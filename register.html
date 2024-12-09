@@ -47,7 +47,7 @@
              <input
                    id="password"
                    type="password"
-                   placeholder="password123"
+                   placeholder="password"
                    name="password"
                    required
              />
@@ -56,7 +56,7 @@
            <div>
              <label for="confirm-password">Confirm Password</label>
              <input
-                   id="confirm-password"
+                   id=""
                    type="password"
                    placeholder="confirm password"
                    name="confirm-password"
@@ -93,7 +93,7 @@
           // Prepare data for Logic App
           const userData = {
             email: email,
-            passwordHash: password, // Ensure this is hashed before sending in a real-world app!
+            password: password,
             name: name,
             role: role
           };
@@ -108,7 +108,11 @@
               body: JSON.stringify(userData)
             });
 
-            const result = await response.json();
+            const result = await response.json().catch(async () => {
+              const text = await response.text();
+              console.error("Response text:", text);
+              throw new Error("Failed to parse JSON response");
+            });
 
             // Handle response
             if (response.ok) {
